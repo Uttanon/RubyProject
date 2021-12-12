@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  password_digest: MyString
+  address: MyString
+  joindate: 2021-12-09
+  rating: 1.5
+
+two:
+  name: MyString
+  password_digest: MyString
+  address: MyString
+  joindate: 2021-12-09
+  rating: 1.5

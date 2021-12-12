@@ -1,0 +1,32 @@
+<%= simple_form_for(@store) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs" style="display:inline-block">
+    <div style="text-align: left;margin:16px" >
+    
+      <% if @store.avatar.attached? %>
+        <%= image_tag @store.avatar, style: "width: 10vw; display: block"%>
+      <% end %>
+      
+      <%= f.label :Avatar %>
+      <%= f.file_field :avatar, class: "form-control" %>
+      
+      <% if @store.cover.attached? %>
+        <%= image_tag @store.cover, style: "width: 10vw; display: block"%>
+      <% end %>
+      
+      <%= f.label :Cover_Image %>
+      <%= f.file_field :cover, class: "form-control" %>
+      
+      <%= f.input :name %>
+      <%= f.input :password%>
+      <%= f.input :address %>
+      <%= f.input :joindate %>
+      <%= f.input :rating, :as => :hidden, :input_html => { :value => 0 }%>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, class:"btn", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 32px"%>
+  </div>
+<% end %>

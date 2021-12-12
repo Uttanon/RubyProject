@@ -1,0 +1,30 @@
+<%= simple_form_for(@user) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs" style="display:inline-block">
+    <div style="text-align: left;margin:16px" >
+    
+      <% if user.avatar.attached? %>
+        <%= image_tag @user.avatar, style: "width: 10vw; display: block"%>
+      <% end %>
+      
+      <%= f.label :avatar %>
+      <%= f.file_field :avatar, class: "form-control" %>
+      
+      <%= f.input :username %>
+      <%= f.input :password %>
+      <%= f.input :email %>
+      <%= f.input :name %>
+      <%= f.input :address %>
+      <%= f.input :phone %>
+      <%= f.input :gender, :collection => %w[Male Female] %>
+      <%= f.input :birthdate %>
+    </div>
+  </div>
+  <div>
+    <div class="form-actions">
+      <%= f.button :submit, class:"btn", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 32px"%>
+    </div>
+  </div>
+<% end %>

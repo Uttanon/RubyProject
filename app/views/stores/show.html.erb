@@ -1,0 +1,35 @@
+
+<% if @store.avatar.attached? %>
+  <%= image_tag @store.avatar, style: "width: 10vw;"%>
+<% end %>
+<% if @store.cover.attached? %>
+  <%= image_tag @store.cover, style: "width: 10vw; "%>
+<% end %>
+
+<p>
+  <strong>Name:</strong>
+  <%= @store.name %>
+</p>
+
+<p>
+  <strong>Password digest:</strong>
+  <%= @store.password_digest %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @store.address %>
+</p>
+
+<p>
+  <strong>Joindate:</strong>
+  <%= @store.joindate %>
+</p>
+
+<p>
+  <strong>Rating:</strong>
+  <%= @store.rating %>
+</p>
+
+<%= link_to 'Edit', edit_store_path(@store) %> |
+<%= link_to 'Back', store_page_path(@store.name) %>

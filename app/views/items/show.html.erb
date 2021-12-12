@@ -1,0 +1,32 @@
+
+<% if @item.pic.attached? %>
+  <%= image_tag @item.pic, style: "width: 10vw;"%>
+<% end %>
+
+<p>
+  <strong>Name:</strong>
+  <%= @item.name %>
+</p>
+
+<p>
+  <strong>tag_ids:</strong>
+  <%= @item.taglib_ids %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @item.price %>
+</p>
+
+<p>
+  <strong>Desc:</strong>
+  <%= @item.desc %>
+</p>
+
+<p>
+  <strong>Store:</strong>
+  <%= @item.store_id %>
+</p>
+
+<%= link_to 'Edit', edit_item_path(@item) %> |
+<%= link_to 'Back', items_path %>

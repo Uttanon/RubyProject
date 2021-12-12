@@ -1,0 +1,4 @@
+class Bucketitem < ApplicationRecord
+  belongs_to :item
+  belongs_to :bucketlib
+end

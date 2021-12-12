@@ -1,0 +1,20 @@
+<div style="text-align: center">
+<%= simple_form_for(@user, :url => recieve_login_info_path, :method => :post) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs" style="display:inline-block">
+    <div style="text-align: left;margin:16px" >
+      <%= f.input :username, error: 'Username is mandatory, please specify one' %>
+      <%= f.input :password %>
+    </div>
+  </div>
+  <div>
+    <div class="form-actions">
+      <%= f.button :submit,"Login", class:"btn", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 32px"%>
+      <div style="padding:16px">
+        <%= f.button :submit,"Register", class:"btn", style:"color:#ED8259; border-radius: 30px; padding: 8px 32px"%>
+      </div>
+    </div>
+  </div>
+<% end %>
