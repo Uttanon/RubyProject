@@ -17,7 +17,7 @@
       <%= f.association :taglibs, label_method: :tag_name, value_method: :id, include_blank: false,   as: :check_boxes %>
       <%= f.input :price %>
       <%= f.input :desc %>
-      <%= f.association :store %>
+      <%= f.hidden_field :store_id, value: session[:user_id] %>
   </div>
 
   <div class="form-actions">

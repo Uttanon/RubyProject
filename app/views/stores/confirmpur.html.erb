@@ -1,11 +1,16 @@
 <div class="container">
-    <div class="row"> <%= image_tag(@store.cover,style:"height: 40vh; object-fit: cover;") %> </div>
-    <div class="row", style="margin:-15vh 0px"> <center> <%= image_tag @store.avatar, style:"width: 10vw; height: 10vw ; object-fit: fill;  border-radius: 50%;" %> </center> </div>
-    <div class="row", style="margin:18vh 0px 16px 0px">
-    	<p class="fw-bold fs-2"><%= @store.name %></p>
+    <div class="row", style="margin:0vh 0px 0px 0px"> 
+      <center> 
+        <% if @user.avatar.attached? %>
+          <%= image_tag @user.avatar, style:"width: 10vw; height: 10vw ; object-fit: fill;  border-radius: 50%;" %> 
+        <% end %>
+      </center> 
+    </div>
+    <div class="row", style="margin:16px 0px 16px 0px">
+    	<p class="fw-bold fs-2"><%= @user.username %></p>
     </div>
     <p class="fw-bold fs-2">ItemPrice( <%=@inbucket.size%> item(s) ) -> <%= @totalprice %></p>
     <p class="fw-bold fs-2">ItemPrice( ShippingCost ) -> 20 </p>
     <p class="fw-bold fs-2">TotalPrice(Include TAX) -> <%= (@totalprice+20)*1.07 %></p>
-    <%= link_to "Confirm", store_confirm_get_path(@store.name), method: "POST", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
+    <%= link_to "Confirm", store_confirm_post_path(@user.id), method: "POST", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
 </div>

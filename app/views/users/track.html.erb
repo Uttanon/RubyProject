@@ -1,0 +1,31 @@
+
+<% @head = true %>
+<% @allrecord.each do |record| %>
+  <% @curID = record[0] %>
+  <% if @curID != @prevID %>
+    <% if @head %>
+      <center>
+      <div class="card" style="width: 50vh; padding : 16px; margin:16px 0px; text-align:left">
+      <% @head = false %>
+    <% else %>
+      <%= link_to "View Order", user_view_order_path(@prevID),class: "btn", method: "GET", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
+      </div>
+      </div>
+      <div class="card" style="width: 50vh; padding : 16px; margin:16px 0px; text-align:left">
+    <% end %>
+    <div class="card-body">
+    <h5 class="card-title">OrderID: <%= @curID %></h5>
+    <% @prevID = @curID %>
+  <% end %>
+  <p class="card-text">
+  <% @oitem = Item.find(record[1]) %>
+  <text class="fw-bold">Name:</text></text><%= @oitem.name %> 
+  <text class="fw-bold">Quantity:</text><%= record[2] %> 
+  <text class="fw-bold">SoldPrice:</text><%= record[3] %>
+  </p>
+<% end %>
+<%= link_to "View Order", user_view_order_path(@prevID),class: "btn", method: "GET", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
+</div>
+</div>
+</center>
+

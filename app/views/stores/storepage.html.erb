@@ -1,14 +1,21 @@
 <div class="container">
-    <div class="row"> <%= image_tag(@store.cover,style:"height: 40vh; object-fit: cover;") %> </div>
-    <div class="row", style="margin:-15vh 0px"> <center> <%= image_tag @store.avatar, style:"width: 10vw; height: 10vw ; object-fit: fill;  border-radius: 50%;" %> </center> </div>
+    <div class="row"> 
+    <% if @store.cover.attached? %>
+      <%= image_tag(@store.cover,style:"height: 40vh; object-fit: cover;") %> 
+    <% end %>
+    </div>
+    <div class="row", style="margin:-15vh 0px"> 
+      <center> 
+        <% if @store.avatar.attached? %>
+          <%= image_tag @store.avatar, style:"width: 10vw; height: 10vw ; object-fit: fill;  border-radius: 50%;" %> 
+        <% end %>
+      </center> 
+    </div>
     <div class="row", style="margin:18vh 0px 16px 0px">
     	<p class="fw-bold fs-2"><%= @store.name %></p>
     </div>
     <% if session[:user_id] == @store.id && session[:user_type] == "seller" %>
       <%= link_to "Add Item", new_item_path , class: "index-link", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 32px; margin: 32px" %>
-    <% end %>
-    <% if session[:user_type] == "buyer" %>
-      <%= link_to "Favorite", new_item_path , class: "index-link", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 32px; margin: 32px" %>
     <% end %>
     <div class="container">
       <div class="row">
@@ -24,17 +31,24 @@
           <% end %>
           <div class="card", style="width:40vw; text-align:left; margin : 16px ">
           <div class = "row">
-            <%= image_tag item[3],class:"col", style: "height: 30vh;object-fit: scale-down; padding:16px;"%>
+            <% if item[3].attached? %>
+              <%= image_tag item[3],class:"col", style: "height: 30vh;object-fit: scale-down; padding:16px;"%>
+            <% end %>
             <div class = "col">
               <div class="card-body">
                 <h5 class="card-title fw-bold fs-2"><%= item[1] %></h5>
-                <p class="card-text fw-bold fs-3", style="color:#ED8259">B <%= item[2] %></p>
+                <% if session[:user_type] == "buyer" && !@favitem.include?(item[4])%>
+                  <%= link_to "Favorite", store_fav_item_path(@store.name,item[4]) , class: "index-link btn",method:"POST", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 32px;" %>
+                <% elsif session[:user_type] == "buyer" && @favitem.include?(item[4])%>
+                  <%= link_to "Unfavorite", store_unfav_item_path(@store.name,item[4]) , class: "index-link btn",method:"POST", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 32px;" %>
+                <% end %>
+                <p class="card-text fw-bold fs-3", style="color:#ED8259;margin:16px 0px">B <%= item[2] %></p>
                 <% if session[:user_id] == @store.id && session[:user_type] == "seller" %>
                   <%= link_to "Edit Item", edit_item_path(item[4]) , class: "index-link", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 32px; " %>
                 <% end %>
                 <% if session[:user_type] == "buyer" %>
-                  <%= link_to "-", dec_item_path(@store.name,item[4]), method: "POST", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
-                  <%= link_to "+", inc_item_path(@store.name,item[4]), method: "POST", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
+                  <%= link_to "-", dec_item_path(item[4]), class: "btn", method: "POST", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
+                  <%= link_to "+", inc_item_path(item[4]), class: "btn", method: "POST", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
                 <% end %>
               </div>
             </div>
@@ -43,13 +57,16 @@
       </div>
     <% end %>
       </div>
+      <% if session[:user_type] == "buyer" %>
       <div class="col">
           <div class="fs-3", style="text-align:left">
               MyCart
                 <% @inbucket.each do |(x,y)| %>
                 <div class="card", style="width:20vw; text-align:left; margin : 16px ">
                   <% @curItem = Item.find_by("id":x) %>
-                  <%= image_tag(@curItem.pic,style:"height: 40vh; object-fit: cover;") %>
+                  <% if @curItem.pic.attached? %>
+                    <%= image_tag(@curItem.pic,style:"height: 40vh; object-fit: cover;") %>
+                  <% end %>
                   <div class="card-body">
                     <h5 class="card-title"><%=@curItem.name%> x <%=y%></h5>
                     <p class="card-text fw-bold fs-3", style="color:#ED8259""><%=@curItem.price%> * <%=y%> = <%=@curItem.price * y%></p>
@@ -57,7 +74,38 @@
                 </div>                  
                 <% end %>
                 <p class="fw-bold fs-3", style="color:#ED8259; margin : 16px ">Total: <%= @totalprice %></p>
-                <%= link_to "Confirm", store_confirm_get_path(@store.name), method: "GET", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
+                <%= link_to "Confirm", store_confirm_get_path(session[:user_id]),class: "btn", method: "GET", style:"background-color:#FADACD; color:#ED8259; border-radius: 30px; padding: 8px 16px; " %>
 
         </div>
+        <% end %>
     </div>
+  <div class="d-flex flex-wrap">
+    <% @allcomment.each do |comment| %>
+      <% @cuid = User.find(comment.user_id) %>
+      <div class="card" style="width: 18rem;">
+        <% if @cuid.avatar.attached? %>
+          <%= image_tag @cuid.avatar, class:"col", style: "height: 30vh;object-fit: scale-down; padding:16px;"%>
+        <% end %>
+        <div class="card-body">
+          <h5 class="card-title"><%=@cuid.name%></h5>
+          <p class="card-text fw-bold fs-3"><%=comment.comment%></p>
+          <p class="card-text fw-bold fs-4"><%=comment.ratescore%></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <% if session[:user_type] == "buyer" %>
+    <%= simple_form_for(@rating, :url => add_comment_path, :method => :post) do |f| %>
+      <%= f.hidden_field :store_id, value: @store.id%>
+      <%= f.hidden_field :user_id, value: session[:user_id]%>
+      <%= f.input :ratescore, value: 0%>
+      <%= f.input :comment %>
+      <%= f.button :submit %>
+    <% end %>
+  <% end %>
+  <style type="text/css">
+    .btn:hover{
+      color:#FFFFFF!important;
+      background-color:#FADACD!important;
+    }  
+  </style>

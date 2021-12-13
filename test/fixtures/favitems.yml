@@ -1,9 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  item: one
-  favlib: one
+  id: 1
+  item_id: 1
+  favlib_id: 1
 
 two:
-  item: two
-  favlib: two
+  id: 2
+  item_id: 2
+  favlib_id: 2

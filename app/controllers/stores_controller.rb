@@ -69,7 +69,10 @@ class StoresController < ApplicationController
       tmp = Bucketlib.create("user_id":session[:user_id],"quantity":1)
       Bucketitem.create("item_id":params[:item_id],"bucketlib_id":tmp.id)
     end
-    redirect_to store_page_path(params[:name])
+    @sid = Item.find_by("id":params[:item_id]).store_id
+    @sname = Store.find(@sid).name
+    redirect_to request.referrer
+
   end
   
   def decitem
@@ -85,11 +88,14 @@ class StoresController < ApplicationController
         end
       end 
     end
-    redirect_to store_page_path(params[:name])
+    @sid = Item.find_by("id":params[:item_id]).store_id
+    @sname = Store.find(@sid).name
+    redirect_to request.referrer
+
   end
   
   def confirmpur
-    @store = Store.find_by(name: params[:name])
+    @user = User.find_by(params[:user_id])
     @inbucket = []
   	@totalprice = 0
   	@bucketlibs = Bucketlib.where("user_id":session[:user_id])
@@ -100,10 +106,6 @@ class StoresController < ApplicationController
   	  @inbucket.push([@item_id,@item_quantity])
   	  @totalprice += Item.find_by("id":@item_id).price * @item_quantity
        end
-  end
-  
-  def track
-  
   end
   
   def recordpur
@@ -126,10 +128,11 @@ class StoresController < ApplicationController
       Bucketitem.find_by("bucketlib_id":bucketlibid).destroy
       Bucketlib.find_by("user_id": session[:user_id]).destroy
     end
-    
+    redirect_to track_page_path
   end
   
   def storepage
+        @rating = Rating.new()
   	@store = Store.find_by(name: params[:name])
   	session[:view] = "seller"
   	@allItem = []
@@ -142,17 +145,52 @@ class StoresController < ApplicationController
   	@allItem = @allItem.sort_by{ |tag| tag }
   	@prevtag = nil
   	
-  	
-  	@inbucket = []
-  	@totalprice = 0
-  	@bucketlibs = Bucketlib.where("user_id":session[:user_id])
-  	@bucketlibs.each do |bucketlib|
-  	  @bid = bucketlib.id
-  	  @item_id = Bucketitem.find_by("bucketlib_id":@bid).item_id
-  	  @item_quantity = bucketlib.quantity
-  	  @inbucket.push([@item_id,@item_quantity])
-  	  @totalprice += Item.find_by("id":@item_id).price * @item_quantity
-        end
+  	if(session[:user_type] == "buyer")
+  	  @inbucket = []
+  	  @totalprice = 0
+  	  @bucketlibs = Bucketlib.where("user_id":session[:user_id])
+  	  @bucketlibs.each do |bucketlib|
+  	    @bid = bucketlib.id
+  	    @item_id = Bucketitem.find_by("bucketlib_id":@bid).item_id
+  	    @item_quantity = bucketlib.quantity
+  	   @inbucket.push([@item_id,@item_quantity])
+  	    @totalprice += Item.find_by("id":@item_id).price * @item_quantity
+          end
+       
+         @favlibid = User.find(session[:user_id]).favlib.id
+         @favitem = Favitem.where("favlib_id":@favlibid).pluck("item_id")
+       end
+       @allcomment = Rating.where("store_id": @store.id)
+  end
+  
+  def favitem
+    if Favlib.find_by("user_id":session[:user_id]) == nil
+      tmp = Favlib.create("user_id":session[:user_id])
+      Favitem.create("item_id":params[:item_id],"favlib_id":tmp.id)
+    elsif
+      tmp = Favlib.find_by("user_id":session[:user_id])
+      Favitem.create("item_id":params[:item_id],"favlib_id":tmp.id)
+    end
+    
+    @store = Store.find_by(name: params[:name])
+    redirect_to store_page_path(@store.name)
+    
+  end
+  
+  def unfavitem
+    tmp = Favlib.find_by("user_id":session[:user_id])
+    Favitem.find_by("item_id":params[:item_id],"favlib_id":tmp.id).destroy
+    @store = Store.find_by(name: params[:name])
+    redirect_to store_page_path(@store.name)
+  end
+  
+  def addcomment
+    @sid = params[:rating][:store_id]
+    @uid = params[:rating][:user_id]
+    @score = params[:rating][:ratescore]
+    @comment = params[:rating][:comment]
+    Rating.create("comdate": Date.current,"ratescore":@score,"comment":@comment,"store_id":@sid,"user_id":@uid)
+    redirect_to request.referrer
   end
 
   private

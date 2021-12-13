@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
+  
 
   # GET /users or /users.json
   def index
@@ -94,6 +95,57 @@ class UsersController < ApplicationController
   def userpage
     @user = User.find_by(username: params[:username])
     session[:view] = "buyer"
+    
+    @allfav = []
+    if Favlib.find_by("user_id":@user.id) == nil
+      Favlib.create("user_id":@user.id)
+    end
+    @favitems = Favlib.find_by("user_id":@user.id).favitems
+    @favitems.each do |favitem|
+      favitem.item.taglibs.each do |tag|
+        @tmp = [tag.tag_name,favitem.item.name,favitem.item.price,favitem.item.pic,favitem.item.id]
+        @allfav.push(@tmp)
+      end
+    end
+    @allfav = @allfav.sort_by{ |tag| tag }
+    @favlibid = User.find(session[:user_id]).favlib.id
+    @favitem = Favitem.where("favlib_id":@favlibid).pluck("item_id")
+    
+    @inbucket = []
+  	@totalprice = 0
+  	@bucketlibs = Bucketlib.where("user_id":session[:user_id])
+  	@bucketlibs.each do |bucketlib|
+  	  @bid = bucketlib.id
+  	  @item_id = Bucketitem.find_by("bucketlib_id":@bid).item_id
+  	  @item_quantity = bucketlib.quantity
+  	  @inbucket.push([@item_id,@item_quantity])
+  	  @totalprice += Item.find_by("id":@item_id).price * @item_quantity
+       end
+    
+  end
+  def track
+    @allrecord = []
+    @user = User.find(session[:user_id])
+    @allOrder = Order.where("user_id":@user.id)
+    @allOrder.each do |order|
+      @orderID = order.id
+      @allOrderline = Orderline.where("order_id":@orderID)
+      @allOrderline.each do |orderline|
+        @tmp = [@orderID,orderline.item_id,orderline.quantity,orderline.soldprice]
+        @allrecord.push(@tmp)
+      end
+    end
+    @prevID = nil
+  end
+  
+  def vieworder
+    @allrecord = []
+    @orderID = params[:order_id]
+    @allOrderline = Orderline.where("order_id":@orderID)
+    @allOrderline.each do |orderline|
+      @tmp = [orderline.item_id,orderline.quantity,orderline.soldprice]
+      @allrecord.push(@tmp)
+    end 
   end
 
   private

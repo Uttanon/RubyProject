@@ -10,7 +10,7 @@
       <% end %>
       
       <%= f.label :Avatar %>
-      <%= f.file_field :avatar, class: "form-control" %>
+      <%= f.file_field :avatar, class: "form-control"%>
       
       <% if @store.cover.attached? %>
         <%= image_tag @store.cover, style: "width: 10vw; display: block"%>

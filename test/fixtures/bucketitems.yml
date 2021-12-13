@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  item: one
-  bucketlib: one
+  item_id: 1
+  bucketlib_id: 1
 
 two:
-  item: two
-  bucketlib: two
+  item_id: 2
+  bucketlib_id: 1

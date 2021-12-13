@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  item: one
-  taglib: one
+  item_id: 1
+  taglib_id: 1
 
 two:
-  item: two
-  taglib: two
+  item_id: 2
+  taglib_id: 2

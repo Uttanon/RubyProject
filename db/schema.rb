@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_12_185306) do
+ActiveRecord::Schema.define(version: 2021_12_13_054941) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -110,6 +110,18 @@ ActiveRecord::Schema.define(version: 2021_12_12_185306) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "ratings", force: :cascade do |t|
+    t.date "comdate"
+    t.float "ratescore"
+    t.string "comment"
+    t.integer "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "store_id", null: false
+    t.index ["store_id"], name: "index_ratings_on_store_id"
+    t.index ["user_id"], name: "index_ratings_on_user_id"
+  end
+
   create_table "stores", force: :cascade do |t|
     t.string "name"
     t.string "password_digest"
@@ -152,4 +164,6 @@ ActiveRecord::Schema.define(version: 2021_12_12_185306) do
   add_foreign_key "itemtags", "taglibs"
   add_foreign_key "orderlines", "orders"
   add_foreign_key "orders", "users"
+  add_foreign_key "ratings", "stores"
+  add_foreign_key "ratings", "users"
 end

@@ -1,0 +1,17 @@
+<% @allrecord.each do |record| %>
+  <% @item = Item.find(record[0]) %>
+  <div class="card, style="height: 40vh;">
+  <div class="row">
+  <div class="col">
+    <% if @item.pic.attached? %>
+      <%= image_tag @item.pic,class:"col", style: "height: 30vh;object-fit: scale-down; padding:16px;"%>
+    <% end %>
+  </div>
+  <div class="col"
+  <div class="card-body">
+    <h5 class="fs-2", style="text-align:left"><%=@item.name%> x <%= record[1] %></h5>
+    <p class="card-text fs-2", style="text-align:left;color:#ED8259;">B <%= record[2] %></p>   
+  </div>
+  </div>
+</div>
+<%end%>
